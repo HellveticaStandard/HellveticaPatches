@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/HellveticaStandard/TestingStuff/compare/v1.0.1...v1.0.2) (2026-06-25)
+
+### 🐛 Bug Fixes
+
+* rename source to HellveticaStandard Patches ([234fea4](https://github.com/HellveticaStandard/TestingStuff/commit/234fea4f7d526833a78860794c81bd1aaf60a9b6))
+
 ## [1.0.1](https://github.com/HellveticaStandard/TestingStuff/compare/v1.0.0...v1.0.1) (2026-06-25)
 
 ### 🐛 Bug Fixes
