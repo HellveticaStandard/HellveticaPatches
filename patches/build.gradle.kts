@@ -2,13 +2,13 @@ group = "app.template"
 
 patches {
     about {
-        name = "UserXYZ Patches"
+        name = "HellveticaStandard Patches"
         description = "Patches for apps I like"
-        source = "git@github.com:UserXYZ/morphe-patches.git"
-        author = "Awesome dev"
+        source = "git@github.com:HellveticaStandard/morphe-patches.git"
+        author = "HellveticaStandard"
         contact = "na"
         website = "na"
-        license = "GPLv3"
+        license = "MIT"
     }
 }
 
