@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/HellveticaStandard/TestingStuff/compare/v1.0.0...v1.0.1) (2026-06-25)
+
+### 🐛 Bug Fixes
+
+* patch showPopupUpsell bytecode to always skip popup display ([b52dc72](https://github.com/HellveticaStandard/TestingStuff/commit/b52dc7234ad4461176af08523addc5cfed904522))
+
 ## 1.0.0 (2026-06-25)
 
 ### 🐛 Bug Fixes
