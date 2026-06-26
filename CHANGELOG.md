@@ -1,3 +1,9 @@
+## [1.0.4](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.3...v1.0.4) (2026-06-26)
+
+### 🐛 Bug Fixes
+
+* migrate package from app.template to app.hellvetica to avoid namespace collisions ([8229715](https://github.com/HellveticaStandard/HellveticaPatches/commit/8229715eaf7f5bf82826ca695651f0bc8e2ba745))
+
 ## [1.0.3](https://github.com/HellveticaStandard/TestingStuff/compare/v1.0.2...v1.0.3) (2026-06-25)
 
 ### 🐛 Bug Fixes
