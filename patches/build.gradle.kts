@@ -4,7 +4,7 @@ patches {
     about {
         name = "HellveticaStandard Patches"
         description = "Patches for apps I like"
-        source = "git@github.com:HellveticaStandard/morphe-patches.git"
+        source = "git@github.com:HellveticaStandard/HellveticaPatches.git"
         author = "HellveticaStandard"
         contact = "na"
         website = "na"
