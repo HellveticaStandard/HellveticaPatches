@@ -1,7 +1,7 @@
-package app.template.patches.sankaku
+package app.hellvetica.patches.sankaku
 
 import app.morphe.patcher.patch.rawResourcePatch
-import app.template.patches.shared.Constants.COMPATIBILITY_SANKAKU
+import app.hellvetica.patches.shared.Constants.COMPATIBILITY_SANKAKU
 
 /**
  * Patch to disable the "Want unlimited access? Get Sankaku Infinite!" upsell popup
