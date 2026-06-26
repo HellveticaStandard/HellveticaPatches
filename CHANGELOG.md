@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/HellveticaStandard/TestingStuff/compare/v1.0.2...v1.0.3) (2026-06-25)
+
+### 🐛 Bug Fixes
+
+* remove example patch template leftovers ([33edae6](https://github.com/HellveticaStandard/TestingStuff/commit/33edae640de470b1b0e14f284cd4b474d33e0d13))
+
 ## [1.0.2](https://github.com/HellveticaStandard/TestingStuff/compare/v1.0.1...v1.0.2) (2026-06-25)
 
 ### 🐛 Bug Fixes
