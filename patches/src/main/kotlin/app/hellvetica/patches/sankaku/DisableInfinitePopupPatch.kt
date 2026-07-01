@@ -10,10 +10,8 @@ import app.morphe.patcher.patch.rawResourcePatch
  * Sankaku Channel is a React Native app. Its UI and business logic are compiled
  * into Hermes bytecode at `assets/index.android.bundle`.
  *
- * The popup is controlled by `showPopupUpsell`. Both supported versions start by
- * checking a premium/subscription flag and returning early when that flag is true.
- * This patch changes the `JmpTrue` register operand to point at an environment
- * object that is always truthy, forcing the early-return path.
+ * The popup display path is controlled by `showPopupUpsell`, and the trigger
+ * decision is controlled by `checkShowPopupUpsellModal`.
  *
  * 4.23-rc91:
  * - Function #43041 at file offset 0x00DE772B.
@@ -22,6 +20,8 @@ import app.morphe.patcher.patch.rawResourcePatch
  * 4.24-rc92:
  * - Function #36745 at file offset 0x01151617.
  * - Change `JmpTrue 112, r4` to `JmpTrue 112, r3`.
+ * - Function #19195 at file offset 0x00E9821F.
+ * - Change the final `true` returns in `checkShowPopupUpsellModal` to `false`.
  */
 @Suppress("unused")
 val disableInfinitePopupPatch = rawResourcePatch(
@@ -35,16 +35,54 @@ val disableInfinitePopupPatch = rawResourcePatch(
     execute {
         val bundlePath = "assets/index.android.bundle"
 
-        val rc92TargetPattern = byteArrayOf(
+        fun ByteArray.indexOfPattern(pattern: ByteArray): Int {
+            outer@ for (i in 0..(size - pattern.size)) {
+                for (j in pattern.indices) {
+                    if (this[i + j] != pattern[j]) continue@outer
+                }
+
+                return i
+            }
+
+            return -1
+        }
+
+        data class BundlePatch(
+            val label: String,
+            val target: ByteArray,
+            val replacement: ByteArray,
+        )
+
+        val rc92ShowPopupTargetPattern = byteArrayOf(
             0x34, 0x03, 0x00,              // GetParentEnvironment r3, 0
             0x3B, 0x04, 0x03, 0x03,        // LoadFromEnvironment r4, r3, 3
             0xB0.toByte(), 0x70, 0x04,     // JmpTrue 112, r4
         )
 
-        val rc92ReplacementPattern = byteArrayOf(
+        val rc92ShowPopupReplacementPattern = byteArrayOf(
             0x34, 0x03, 0x00,
             0x3B, 0x04, 0x03, 0x03,
             0xB0.toByte(), 0x70, 0x03,     // JmpTrue 112, r3
+        )
+
+        val rc92CheckPopupTargetPattern = byteArrayOf(
+            0x96.toByte(), 0x02, 0x76, 0x02, // LoadConstFalse r2; Ret r2
+            0x95.toByte(), 0x02, 0x76, 0x02, // LoadConstTrue r2; Ret r2
+            0x95.toByte(), 0x02, 0x76, 0x02,
+            0x95.toByte(), 0x02, 0x76, 0x02,
+            0x95.toByte(), 0x02, 0x76, 0x02,
+            0x95.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02, // LoadConstFalse r2; Ret r2
+        )
+
+        val rc92CheckPopupReplacementPattern = byteArrayOf(
+            0x96.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02,
+            0x96.toByte(), 0x02, 0x76, 0x02,
         )
 
         val rc91TargetPattern = byteArrayOf(
@@ -60,45 +98,53 @@ val disableInfinitePopupPatch = rawResourcePatch(
         )
 
         val patchTargets = listOf(
-            "4.24-rc92" to (rc92TargetPattern to rc92ReplacementPattern),
-            "4.23-rc91" to (rc91TargetPattern to rc91ReplacementPattern),
+            "4.24-rc92" to listOf(
+                BundlePatch("showPopupUpsell early return", rc92ShowPopupTargetPattern, rc92ShowPopupReplacementPattern),
+                BundlePatch("checkShowPopupUpsellModal returns false", rc92CheckPopupTargetPattern, rc92CheckPopupReplacementPattern),
+            ),
+            "4.23-rc91" to listOf(
+                BundlePatch("showPopupUpsell early return", rc91TargetPattern, rc91ReplacementPattern),
+            ),
         )
 
         val bundleFile = get(bundlePath)
         val patched = bundleFile.readBytes()
 
-        var matchIndex = -1
-        var replacementPattern: ByteArray? = null
+        var matchedPatches: List<Pair<BundlePatch, Int>> = emptyList()
         var matchedVersion = ""
 
-        for ((version, patterns) in patchTargets) {
-            val (targetPattern, candidateReplacement) = patterns
-
-            outer@ for (i in 0..(patched.size - targetPattern.size)) {
-                for (j in targetPattern.indices) {
-                    if (patched[i + j] != targetPattern[j]) continue@outer
+        for ((version, bundlePatches) in patchTargets) {
+            val matches = bundlePatches.map { bundlePatch ->
+                require(bundlePatch.target.size == bundlePatch.replacement.size) {
+                    "Patch ${bundlePatch.label} has mismatched target/replacement sizes"
                 }
 
-                matchIndex = i
-                replacementPattern = candidateReplacement
+                bundlePatch to patched.indexOfPattern(bundlePatch.target)
+            }
+
+            if (matches.all { (_, index) -> index >= 0 }) {
+                matchedPatches = matches
                 matchedVersion = version
                 break
             }
-
-            if (matchIndex >= 0) break
         }
 
-        require(matchIndex >= 0) {
-            "showPopupUpsell function signature not found in $bundlePath. " +
+        require(matchedPatches.isNotEmpty()) {
+            "Infinite popup patch signatures not found in $bundlePath. " +
                     "The app may have been updated. Expected one of: " +
-                    patchTargets.joinToString("; ") { (version, patterns) ->
-                        val (targetPattern, _) = patterns
-                        "$version=${targetPattern.joinToString(" ") { "0x%02X".format(it) }}"
+                    patchTargets.joinToString("; ") { (version, bundlePatches) ->
+                        "$version=" + bundlePatches.joinToString(", ") { bundlePatch ->
+                            "${bundlePatch.label}[${
+                                bundlePatch.target.joinToString(" ") { "0x%02X".format(it) }
+                            }]"
+                        }
                     }
         }
 
-        replacementPattern!!.copyInto(patched, matchIndex)
-        println("Patched showPopupUpsell for $matchedVersion at 0x${matchIndex.toString(16)}")
+        matchedPatches.forEach { (bundlePatch, index) ->
+            bundlePatch.replacement.copyInto(patched, index)
+            println("Patched ${bundlePatch.label} for $matchedVersion at 0x${index.toString(16)}")
+        }
 
         bundleFile.writeBytes(patched)
     }
