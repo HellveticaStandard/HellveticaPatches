@@ -1,3 +1,9 @@
+## [1.0.5-dev.1](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.4...v1.0.5-dev.1) (2026-07-01)
+
+### 🐛 Bug Fixes
+
+* support Sankaku 4.24 popup blocker ([10b6ed1](https://github.com/HellveticaStandard/HellveticaPatches/commit/10b6ed15dfe2774a60953cdacc3696f122fb53fc))
+
 ## [1.0.4](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.3...v1.0.4) (2026-06-26)
 
 ### 🐛 Bug Fixes
