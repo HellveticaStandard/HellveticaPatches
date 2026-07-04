@@ -1,10 +1,43 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.5-dev.2",
+  "version": "1.1.0-dev.1",
   "patches": [
     {
       "name": "Disable Infinite Upgrade Popup",
       "description": "Disables the \"Want unlimited access? Get Sankaku Infinite!\" upsell popup that periodically appears while browsing the app.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.sankakucomplex.channel.black",
+          "name": "Sankaku App",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#1B1B2F",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "4.23",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "4.24",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock Premium Features",
+      "description": "Enables username editing, activates the 'Do not display advertising' toggle, and removes the 'GET SANKAKU PLUS' upsell block from the browsing footer -- without requiring a premium subscription.",
       "default": true,
       "dependencies": [],
       "compatiblePackages": [

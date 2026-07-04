@@ -1,3 +1,9 @@
+## [1.1.0-dev.1](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.5-dev.2...v1.1.0-dev.1) (2026-07-04)
+
+### ✨ New Features
+
+* **sankaku:** add UnlockPremiumFeaturesPatch for 4.24-rc92 ([3aba245](https://github.com/HellveticaStandard/HellveticaPatches/commit/3aba245c4e7a60eb71843117cf595defd9a403fe)), closes [#22029](https://github.com/HellveticaStandard/HellveticaPatches/issues/22029) [#22038](https://github.com/HellveticaStandard/HellveticaPatches/issues/22038) [#16428](https://github.com/HellveticaStandard/HellveticaPatches/issues/16428)
+
 ## [1.0.5-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.5-dev.1...v1.0.5-dev.2) (2026-07-01)
 
 ### 🐛 Bug Fixes

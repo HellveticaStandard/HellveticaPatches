@@ -9,9 +9,9 @@ Patches for apps maintained by HellveticaStandard.
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.5-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/releases/tag/v1.0.5-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
+> **[v1.1.0-dev.1](https://github.com/HellveticaStandard/HellveticaPatches/releases/tag/v1.1.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;2 patches total
 <details open>
-<summary>📦 Sankaku App&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Sankaku App&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -22,6 +22,7 @@ Patches for apps maintained by HellveticaStandard.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable Infinite Upgrade Popup](#disable-infinite-upgrade-popup) | Disables the "Want unlimited access? Get Sankaku Infinite!" upsell popup that periodically appears while browsing the app. |  |
+| [Unlock Premium Features](#unlock-premium-features) | Enables username editing, activates the 'Do not display advertising' toggle, and removes the 'GET SANKAKU PLUS' upsell block from the browsing footer -- without requiring a premium subscription. |  |
 
 </details>
 
