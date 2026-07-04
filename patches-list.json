@@ -34,39 +34,6 @@
         }
       ],
       "options": []
-    },
-    {
-      "name": "Unlock Premium Features",
-      "description": "Enables username editing, activates the 'Do not display advertising' toggle, and removes the 'GET SANKAKU PLUS' upsell block from the browsing footer -- without requiring a premium subscription.",
-      "default": true,
-      "dependencies": [],
-      "compatiblePackages": [
-        {
-          "packageName": "com.sankakucomplex.channel.black",
-          "name": "Sankaku App",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#1B1B2F",
-          "signatures": null,
-          "targets": [
-            {
-              "version": "4.23",
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "4.24",
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
     }
   ]
 }
