@@ -1,3 +1,9 @@
+## [1.1.0-dev.3](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-07-04)
+
+### 🐛 Bug Fixes
+
+* **docs:** remove UnlockPremiumFeaturesPatch from README and patches-list ([43fd8b7](https://github.com/HellveticaStandard/HellveticaPatches/commit/43fd8b75a542bd6e9243aa233e1914c2cc3b27a8))
+
 ## [1.1.0-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-07-04)
 
 ### 🐛 Bug Fixes
