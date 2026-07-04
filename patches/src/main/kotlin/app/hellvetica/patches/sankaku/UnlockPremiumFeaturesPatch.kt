@@ -1,4 +1,4 @@
-﻿package app.hellvetica.patches.sankaku
+package app.hellvetica.patches.sankaku
 
 import app.hellvetica.patches.shared.Constants.COMPATIBILITY_SANKAKU
 import app.morphe.patcher.patch.rawResourcePatch
@@ -24,34 +24,58 @@ import app.morphe.patcher.patch.rawResourcePatch
  *   Replace: 0x17 0x14 0x05 0x05  (StrictEq  r20, r5, r5 -> always true)
  *
  * --- Feature 2: Enable "Do not display advertising" toggle ---
- * The settings screen (PreferencesCom, Function #22038) checks whether the user
- * has a paid subscription (via r5 truthy) before deciding if the hide-ads row
- * gets isDisabled=true. The branch:
- *   JmpTrue 0x1F, r5 -> jumps to the premium path if truthy (subscriber)
- * For free users the branch falls through to { isDisabled: true }.
+ * PreferencesCom (Function #22038, offset 0x00F37805) renders the ads toggle.
+ * The component builds the options array for the preference row. For FREE users
+ * `isDisabled` is computed as `Not r2, r9` where r9 = useMemo result evaluating
+ * the subscription level -- returning false for FREE -- so `!false = true`
+ * means the toggle is disabled.
  *
- * Fix: replace JmpTrue (0xB0) with unconditional Jmp (0xAE). The jump target
- * (offset 0x1F) stays the same so we always land on the premium path.
+ * TWO patches are applied:
  *
- *   Function #22038 "PreferencesCom" (875 bytes) @ bundle offset 0x00F37805
- *   Instruction IP 0x294 -> bundle offset 0x00F37A99
- *   Target:  0xB0 0x1F 0x05  (JmpTrue 31, r5)
- *   Replace: 0xAE 0x1F 0x05  (Jmp 31 + skipped operand byte)
+ * 2a. Route all users onto the premium settings path (harmless for logged-in
+ *     users; mainly helps guests see the full preference list):
+ *     IP 0x294 -> bundle offset 0x00F37A99
+ *     Target:  0xB0 0x1F 0x05  (JmpTrue 31, r5)
+ *     Replace: 0xAE 0x1F 0x05  (Jmp 31  -> unconditional)
  *
- * --- Feature 3: Remove "GET SANKAKU PLUS" upsell from dropdown menu ---
- * The footer component (FooterBrowsingLimits, Function #16428) renders a
- * "Get Plus" button when subscription_level == 0. The logic is:
- *   r8 = (subscription_level === 0)   <- true when FREE
- *   JmpFalseLong 267, r8              <- only skips block when NOT free
+ * 2b. Force isDisabled = false by replacing the Not source register:
+ *     `Not r2, r9`  (r9 = useMemo subscription check, false for FREE)
+ *     ->  `Not r2, r11` (r11 = onPressHideAd closure, always truthy,
+ *                        so !truthy = false -> isDisabled = false).
+ *     IP 0x2E4 -> bundle offset 0x00F37AE9
+ *     Pattern anchors on the two flanking PutOwnBySlotIdx instructions.
  *
- * Fix: change register operand from r8 to r0. At this point r0 holds the
- * result of LoadConstZero (value 0, always falsy), so JmpFalseLong 267, r0
- * always jumps -- permanently hiding the GET SANKAKU PLUS promotional block.
+ * --- Feature 3: Remove "GET SANKAKU PLUS" upsell blocks ---
  *
- *   Function #16428 "FooterBrowsingLimits" (741 bytes) @ bundle offset 0x00E220DF
- *   Instruction IP 0xA6 -> bundle offset 0x00E22185
- *   Target:  0xB3 0x0B 0x01 0x00 0x00 0x08  (JmpFalseLong 267, r8)
- *   Replace: 0xB3 0x0B 0x01 0x00 0x00 0x00  (JmpFalseLong 267, r0 -> always jump)
+ * 3a. FooterBrowsingLimits (Function #16428, offset 0x00E220DF) renders an
+ *     inline "Get Plus" block when subscription_level == 0.
+ *     Fix: change JmpFalseLong register from r8 (= sub==0, true for FREE)
+ *     to r0 (= LoadConstZero = 0 = always falsy) so the jump always fires
+ *     and the block is permanently skipped.
+ *     IP 0xA6 -> bundle offset 0x00E22185
+ *     Target:  0xB3 0x0B 0x01 0x00 0x00 0x08  (JmpFalseLong 267, r8)
+ *     Replace: 0xB3 0x0B 0x01 0x00 0x00 0x00  (JmpFalseLong 267, r0)
+ *
+ * 3b. getTypeCurrentSubLevelByGGPlay (Function #12010, offset 0x00D9FDC0) is
+ *     the utility that returns the orange-card data object:
+ *     { title: 'common-title__get-sankaku-plus',
+ *       description: 'common-title__upgrade-plan-to-get-benefit',
+ *       color: mainOrange, isShowInfiniteIcon: false }
+ *     The data drives the "GET SANKAKU PLUS" / "Upgrade plan to get more
+ *     benefits" orange card in profile menus.
+ *
+ *     For FREE users the code path is:
+ *       IP 0x75: LoadConstNull r6      (r6 = null)
+ *       IP 0x77: JmpTrue 7, r0 -> 0x7E (r0=false for FREE -> fall-through)
+ *       IP 0x7A: LoadConstString r6, 'common-title__get-sankaku-plus'
+ *     Making the JmpTrue unconditional (Jmp) causes FREE users to jump to
+ *     0x7E with r6 = null, so `title` in the returned object is null and the
+ *     card component does not render the orange upgrade block.
+ *
+ *     IP 0x77 -> bundle offset 0x00D9FE37
+ *     Pattern: LoadConstNull r6 + JmpTrue 7, r0 + LoadConstString r6, 58067
+ *     Target:  0x94 0x06 0xB0 0x07 0x00 0x90 0x06 0xD3 0xE2
+ *     Replace: 0x94 0x06 0xAE 0x07 0x00 0x90 0x06 0xD3 0xE2
  *
  * Verified against 4.24-rc92.
  */
@@ -105,27 +129,52 @@ val unlockPremiumFeaturesPatch = rawResourcePatch(
             0x17.toByte(), 0x14.toByte(), 0x05, 0x05,
         )
 
-        // -- Patch 2: Ads toggle ----------------------------------------------
+        // -- Patch 2a: Ads toggle path (route all users to premium pref path) ------
         // PreferencesCom, Function #22038 @ 0x00F37805, IP 0x294 -> 0x00F37A99
         //
         // Context includes 4 bytes of the preceding StoreToEnvironment tail.
         //
         // Before: JmpTrue  31, r5  (conditional -- skips disabled path only for premium)
         // After:  Jmp      31       (unconditional -- always takes the premium path)
-        val adsTarget = byteArrayOf(
+        val adsPathTarget = byteArrayOf(
             // StoreToEnvironment tail (4 bytes for uniqueness)
             0x37, 0x08.toByte(), 0x09, 0x06,
             // JmpTrue addr8=0x1F(31), reg=r5(0x05)
             0xB0.toByte(), 0x1F, 0x05,
         )
-        val adsReplacement = byteArrayOf(
+        val adsPathReplacement = byteArrayOf(
             // StoreToEnvironment tail -- unchanged
             0x37, 0x08.toByte(), 0x09, 0x06,
             // Jmp addr8=0x1F(31); 0x05 becomes skipped first byte of next instruction
             0xAE.toByte(), 0x1F, 0x05,
         )
 
-        // -- Patch 3: Remove GET SANKAKU PLUS block ---------------------------
+        // -- Patch 2b: Ads isDisabled force-false (the real fix) ------------------
+        // PreferencesCom, Function #22038 @ 0x00F37805, IP 0x2E4 -> 0x00F37AE9
+        //
+        // `Not r2, r9`: r9 = useMemo(subscriptionLevelCheck) = false for FREE
+        //   -> r2 = !false = true -> isDisabled = true (toggle disabled)
+        // `Not r2, r11`: r11 = onPressHideAd closure = always truthy function
+        //   -> r2 = !truthy = false -> isDisabled = false (toggle enabled)
+        //
+        // Pattern anchors on PutOwnBySlotIdx r6, r11, slot2  (0x2E0)
+        //                  + Not r2, r9                       (0x2E4) <- change r9->r11
+        //                  + PutOwnBySlotIdx r6, r2, slot3   (0x2E7)
+        //                  + remaining context for uniqueness
+        val adsNotTarget = byteArrayOf(
+            0x52, 0x06, 0x0B.toByte(), 0x02,         // PutOwnBySlotIdx r6, r11, 2
+            0x13, 0x02, 0x09,                         // Not r2, r9
+            0x52, 0x06, 0x02, 0x03,                   // PutOwnBySlotIdx r6, r2, 3
+            0x5A, 0x05, 0x06, 0x01,                   // (next instr for uniqueness)
+        )
+        val adsNotReplacement = byteArrayOf(
+            0x52, 0x06, 0x0B.toByte(), 0x02,         // PutOwnBySlotIdx r6, r11, 2 (unchanged)
+            0x13, 0x02, 0x0B.toByte(),               // Not r2, r11  (r11 always truthy -> !truthy=false)
+            0x52, 0x06, 0x02, 0x03,                   // PutOwnBySlotIdx r6, r2, 3 (unchanged)
+            0x5A, 0x05, 0x06, 0x01,                   // (unchanged)
+        )
+
+        // -- Patch 3a: Remove GET SANKAKU PLUS block (browse footer) ----------
         // FooterBrowsingLimits, Function #16428 @ 0x00E220DF, IP 0xA6 -> 0x00E22185
         //
         // Context includes the 4-byte StrictEq instruction immediately before
@@ -133,23 +182,51 @@ val unlockPremiumFeaturesPatch = rawResourcePatch(
         //
         // Before: JmpFalseLong 267, r8  (only skips block when NOT free)
         // After:  JmpFalseLong 267, r0  (r0=0 always falsy -> always skips block)
-        val getPlusTarget = byteArrayOf(
+        val getPlusFooterTarget = byteArrayOf(
             // StrictEq r8(0x08), r8(0x08), r0(0x00) -- 4 bytes preceding JmpFalseLong
             0x17.toByte(), 0x08.toByte(), 0x08.toByte(), 0x00,
             // JmpFalseLong opcode + addr32 LE (267 = 0x0000010B) + reg=r8(0x08)
             0xB3.toByte(), 0x0B.toByte(), 0x01, 0x00, 0x00, 0x08,
         )
-        val getPlusReplacement = byteArrayOf(
+        val getPlusFooterReplacement = byteArrayOf(
             // StrictEq -- unchanged
             0x17.toByte(), 0x08.toByte(), 0x08.toByte(), 0x00,
             // JmpFalseLong 267, r0(0x00)  -> always jumps (r0 = LoadConstZero = 0)
             0xB3.toByte(), 0x0B.toByte(), 0x01, 0x00, 0x00, 0x00,
         )
 
+        // -- Patch 3b: Remove GET SANKAKU PLUS orange card (profile/menu) -----
+        // getTypeCurrentSubLevelByGGPlay, Function #12010 @ 0x00D9FDC0
+        // IP 0x77 -> bundle offset 0x00D9FE37
+        //
+        // This utility function returns the orange-card data:
+        //   { title, description, color, isShowInfiniteIcon }
+        // used by account/profile menu components. For FREE users the code path
+        // falls through to load `title = 'common-title__get-sankaku-plus'`.
+        //
+        // Fix: change JmpTrue 7, r0 -> Jmp 7 (unconditional). FREE users then
+        // jump to the merge point with r6 = null (title = null), so the calling
+        // component sees no title and does not render the orange upgrade card.
+        //
+        // Pattern: LoadConstNull r6 + JmpTrue 7, r0 + LoadConstString r6, 58067
+        //           0x94 0x06      + 0xB0 0x07 0x00  + 0x90 0x06 0xD3 0xE2
+        val getPlusCardTarget = byteArrayOf(
+            0x94.toByte(), 0x06,                      // LoadConstNull r6
+            0xB0.toByte(), 0x07, 0x00,                // JmpTrue addr8=7, r0
+            0x90.toByte(), 0x06, 0xD3.toByte(), 0xE2.toByte(), // LoadConstString r6, 58067
+        )
+        val getPlusCardReplacement = byteArrayOf(
+            0x94.toByte(), 0x06,                      // LoadConstNull r6 (unchanged)
+            0xAE.toByte(), 0x07, 0x00,                // Jmp addr8=7 -> unconditional
+            0x90.toByte(), 0x06, 0xD3.toByte(), 0xE2.toByte(), // LoadConstString r6, 58067 (unchanged)
+        )
+
         val patches = listOf(
             BundlePatch("username StrictNeq -> StrictEq (always editable)", usernameTarget, usernameReplacement),
-            BundlePatch("ads JmpTrue -> Jmp (always enable toggle)", adsTarget, adsReplacement),
-            BundlePatch("GET PLUS JmpFalseLong r8 -> r0 (always hide block)", getPlusTarget, getPlusReplacement),
+            BundlePatch("ads JmpTrue -> Jmp (route to premium pref path)", adsPathTarget, adsPathReplacement),
+            BundlePatch("ads Not r9 -> r11 (force isDisabled=false)", adsNotTarget, adsNotReplacement),
+            BundlePatch("GET PLUS footer JmpFalseLong r8 -> r0 (always hide)", getPlusFooterTarget, getPlusFooterReplacement),
+            BundlePatch("GET PLUS card JmpTrue -> Jmp (title=null, no orange card)", getPlusCardTarget, getPlusCardReplacement),
         )
 
         val bundleFile = get(bundlePath)
