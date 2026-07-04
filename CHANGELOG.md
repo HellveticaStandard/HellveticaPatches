@@ -1,3 +1,14 @@
+## [1.1.0](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.5...v1.1.0) (2026-07-04)
+
+### 🐛 Bug Fixes
+
+* **docs:** remove UnlockPremiumFeaturesPatch from README and patches-list ([43fd8b7](https://github.com/HellveticaStandard/HellveticaPatches/commit/43fd8b75a542bd6e9243aa233e1914c2cc3b27a8))
+* **sankaku:** correct ads toggle and GET SANKAKU PLUS card patches ([9995a46](https://github.com/HellveticaStandard/HellveticaPatches/commit/9995a467ba394b5d574401aefa25f79d54ece1fe)), closes [#12010](https://github.com/HellveticaStandard/HellveticaPatches/issues/12010)
+
+### ✨ New Features
+
+* **sankaku:** add UnlockPremiumFeaturesPatch for 4.24-rc92 ([3aba245](https://github.com/HellveticaStandard/HellveticaPatches/commit/3aba245c4e7a60eb71843117cf595defd9a403fe)), closes [#22029](https://github.com/HellveticaStandard/HellveticaPatches/issues/22029) [#22038](https://github.com/HellveticaStandard/HellveticaPatches/issues/22038) [#16428](https://github.com/HellveticaStandard/HellveticaPatches/issues/16428)
+
 ## [1.1.0-dev.3](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-07-04)
 
 ### 🐛 Bug Fixes
