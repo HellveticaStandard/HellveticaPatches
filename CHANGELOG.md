@@ -1,3 +1,9 @@
+## [1.1.0-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-07-04)
+
+### 🐛 Bug Fixes
+
+* **sankaku:** correct ads toggle and GET SANKAKU PLUS card patches ([9995a46](https://github.com/HellveticaStandard/HellveticaPatches/commit/9995a467ba394b5d574401aefa25f79d54ece1fe)), closes [#12010](https://github.com/HellveticaStandard/HellveticaPatches/issues/12010)
+
 ## [1.1.0-dev.1](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.0.5-dev.2...v1.1.0-dev.1) (2026-07-04)
 
 ### ✨ New Features
