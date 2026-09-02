@@ -36,6 +36,13 @@
               "isExperimental": false,
               "minSdk": null,
               "description": null
+            },
+            {
+              "version": "4.26",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
             }
           ]
         }
