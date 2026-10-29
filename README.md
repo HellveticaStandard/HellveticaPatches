@@ -9,17 +9,17 @@ Patches for apps maintained by HellveticaStandard.
 ## ðŸ©¹ Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.3](https://github.com/HellveticaStandard/HellveticaPatches/releases/tag/v1.1.3)**&nbsp;&nbsp;â€¢&nbsp;&nbsp;`main`&nbsp;&nbsp;â€¢&nbsp;&nbsp;1 patches total
+> **[v1.1.4-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/releases/tag/v1.1.4-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
 <details open>
-<summary>ðŸ“¦ Sankaku App&nbsp;&nbsp;â€¢&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Sankaku App&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
 
-**ðŸŽ¯ Supported versions:**
+**🎯 Supported versions:**
 
 | 4.23 | 4.24 | 4.25 | 4.26 | 4.28 |
 | :---: | :---: | :---: | :---: | :---: |
 
-| ðŸ’Š&nbsp;Patch | ðŸ“œ&nbsp;Description | âš™ï¸&nbsp;Options |
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable Infinite Upgrade Popup](#disable-infinite-upgrade-popup) | Disables the "Want unlimited access? Get Sankaku Infinite!" upsell popup that periodically appears while browsing the app. |  |
 
