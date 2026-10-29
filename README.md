@@ -1,12 +1,12 @@
-﻿# ðŸ‘‹ðŸ§© HellveticaStandard Patches
+﻿# 👋🧩 HellveticaStandard Patches
 
 Morphe Patches by HellveticaStandard.
 
-## â“ About
+## ❓ About
 
 Patches for apps maintained by HellveticaStandard.
 
-## ðŸ©¹ Patches list
+## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
 > **[v1.1.4-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/releases/tag/v1.1.4-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
@@ -33,16 +33,16 @@ Click here to add these patches to Morphe: https://morphe.software/add-source?gi
 
 Or manually add this repository url as a patch source in Morphe: https://github.com/HellveticaStandard/HellveticaPatches
 
-### ðŸ“™ Contributing
+### 📙 Contributing
 
 Thank you for considering contributing to HellveticaStandard Morphe Patches.  
 You can find the contribution guidelines [here](CONTRIBUTING.md).
 
-### ðŸ› ï¸ Building
+### 🛠️ Building
 
 To build HellveticaStandard Morphe Patches,
 you can follow the [Morphe documentation](https://github.com/MorpheApp/morphe-documentation).
 
-## ðŸ“œ License
+## 📜 License
 
 HellveticaStandard Morphe Patches are licensed under the [GNU General Public License v3.0](LICENSE)
