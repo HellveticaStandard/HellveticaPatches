@@ -1,3 +1,9 @@
+## [1.2.0-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-10-31)
+
+### 🐛 Bug Fixes
+
+* **sankaku:** correct TrendingTags render function target offset ([5650790](https://github.com/HellveticaStandard/HellveticaPatches/commit/5650790e9b9184afc0e1b11cc04c4df68fcbc53d))
+
 ## [1.2.0-dev.1](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.1.4...v1.2.0-dev.1) (2026-10-31)
 
 ### ✨ New Features
