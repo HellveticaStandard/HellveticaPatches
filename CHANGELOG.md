@@ -1,3 +1,13 @@
+## [1.2.0](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.1.4...v1.2.0) (2026-10-31)
+
+### 🐛 Bug Fixes
+
+* **sankaku:** correct TrendingTags render function target offset ([5650790](https://github.com/HellveticaStandard/HellveticaPatches/commit/5650790e9b9184afc0e1b11cc04c4df68fcbc53d))
+
+### ✨ New Features
+
+* **sankaku:** add Hide Trending Tags Section patch for 4.28-rc100 ([21c059e](https://github.com/HellveticaStandard/HellveticaPatches/commit/21c059e47e17152a0da246a6e0b1b7561cb737ab))
+
 ## [1.2.0-dev.2](https://github.com/HellveticaStandard/HellveticaPatches/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-10-31)
 
 ### 🐛 Bug Fixes
