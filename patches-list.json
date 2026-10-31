@@ -55,6 +55,32 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Hide Trending Tags Section",
+      "description": "Hides the \"Trending tags\" carousel section from the browse feed.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.sankakucomplex.channel.black",
+          "name": "Sankaku App",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#1B1B2F",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "4.28",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
     }
   ]
 }
