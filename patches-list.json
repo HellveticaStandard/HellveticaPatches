@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.1.4",
+  "version": "1.2.0-dev.1",
   "patches": [
     {
       "name": "Disable Infinite Upgrade Popup",
@@ -70,6 +70,34 @@
           "appIconColor": "#1B1B2F",
           "signatures": null,
           "targets": [
+            {
+              "version": "4.23",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "4.24",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "4.25",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "4.26",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "4.28",
               "versionCodes": null,
