@@ -16,8 +16,8 @@ Patches for apps maintained by HellveticaStandard.
 
 **🎯 Supported versions:**
 
-| 4.23 | 4.24 | 4.25 | 4.26 | 4.28 |
-| :---: | :---: | :---: | :---: | :---: |
+| 4.23 | 4.24 | 4.25 | 4.26 | 4.28 | 4.29 |
+| :---: | :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
